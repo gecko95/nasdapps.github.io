@@ -124,14 +124,14 @@
 		var Transaction = require("nebulas").Transaction;
 		var source  = new contractSource().source;
 		var account = new Account();
-		var contractAddress = 'n1vauL6bmmSJqiTXgd6yjKpsB1a57JkbGXL';
+		var contractAddress = 'n1p2jDhsmU59FJMNYGJbzZQVZQ1X6Xciv2T';
 		var intervalQuery;
 		var newWindow = document.getElementById("newWindow");
 		
 		// 连接网络
 		var neb = new Neb();
-		var chainId = 1001;
-		var netWork = "https://testnet.nebulas.io"
+		var chainId = 1;
+		var netWork = "https://mainnet.nebulas.io"
 		neb.setRequest(new HttpRequest(netWork));
 
 		// 合约代码
