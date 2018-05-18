@@ -368,10 +368,10 @@
 		
 		// 提交合约交易
 		function submitTransaction() {
-			var name = document.getElementById('Name').value;
-			var symbol = document.getElementById('Symbol').value;
-			var decimals = document.getElementById('Decimals').value;
-			var totalSupply = document.getElementById('TotalSupply').value;
+			var name = document.getElementById('Name').value.trim();
+			var symbol = document.getElementById('Symbol').value.trim();
+			var decimals = document.getElementById('Decimals').value.trim();
+			var totalSupply = document.getElementById('TotalSupply').value.trim();
 			if (name === "" || symbol === "" || decimals === "" || totalSupply === "") {
 				alert('请将以上数据填写完整！')
 			} else{

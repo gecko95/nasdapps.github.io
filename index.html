@@ -229,7 +229,7 @@
 		};
 
 		function searchWallet() {
-			var accountAddress = document.getElementById('accountAddress').value;
+			var accountAddress = document.getElementById('accountAddress').value.trim();
 			if (accountAddress === "") {
 				alert("客官，给我个地址吧，巧妇难为无米之炊呀！");
 			} else if (Account.isValidAddress(accountAddress)) {
@@ -342,7 +342,7 @@
 
 		//添加token
 		function addToken() {
-			var tokenAddress = document.getElementById('addAddress').value;
+			var tokenAddress = document.getElementById('addAddress').value.trim();
 			var password = document.getElementById("pass").value;
 			if (tokenAddress ==="" || password === "") {
 				alert("请将内容填写完整！");
@@ -374,8 +374,8 @@
 		function sendToken() {
 			var address = document.getElementById("tokenAddress").value;
 			var balance = document.getElementById("tokenBalance").value;
-			var toAddress = document.getElementById("toAddress").value;
-			var value = document.getElementById("tokenValue").value;
+			var toAddress = document.getElementById("toAddress").value.trim();
+			var value = document.getElementById("tokenValue").value.trim();
 			var password = document.getElementById("pass1").value;
 			console.log(toAddress)
 			if (toAddress == "" || value === "") {
