@@ -380,12 +380,12 @@
 			console.log(toAddress)
 			if (toAddress == "" || value === "") {
 				alert("请将内容填写完整");
-			} else if(parseInt(value) > parseInt(balance)) {
+			} else if(new Number(value) > new Number(balance)) {
 				alert("您没有这么多钱可以转账！");
 			} else if(!Account.isValidAddress(toAddress)){
 				alert("您输入的地址无效，请检查是否输入错误！");
 			} else {
-				var args = [toAddress, parseInt(value)];
+				var args = [toAddress, new Number(value)];
 				console.log(args)
 				var keyStore = document.getElementById("keyFile1").files[0];
 				readKey(keyStore).then(function(key) {
