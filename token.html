@@ -1,0 +1,520 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>创建代币</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="" />
+	<script type="applijewelleryion/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+	<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+	<link href="css/style.css" rel='stylesheet' type='text/css' />
+	<!-- Custom Theme files -->
+	<script src="js/jquery-1.12.0.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<!--animate-->
+	<link href="css/animate.css" rel="stylesheet" type="text/css" media="all">
+	<script src="js/wow.min.js"></script>
+	<script>
+		new WOW().init();
+	</script>
+	<!--//end-animate-->
+</head>
+<body>
+	<!--- header ---->
+	<div class="header">
+		<div class="container">
+			<div class="logo wow fadeInDown animated" data-wow-delay=".2s">
+				<a href="index.html">星云 <span>代币钱包</span></a>	
+			</div>
+			<div class="bus wow fadeInUp animated" data-wow-delay=".2s">
+				<a href="index.html" class="buses active">代币钱包</a>
+				<a href="token.html">创建代币</a>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	<!--- /header ---->
+
+	<!--- token ---->
+	<div class="container">
+		<div class="bann-info">
+			<div class="animated wow fadeInUp animated animated" data-wow-delay=".5s">
+				<h2>请填写创建代币所需的参数</h2>
+			</div>
+			<div class="animated wow fadeInUp animated animated" data-wow-delay=".7s">
+				<div class="ban-top">
+					<form  class="form-horizontal" role="form">
+						<div class="form-group has-feedback">
+							<div class="col-sm-6">
+								<label class="control-label" for="inputSuccess1">代币名称</label>
+								<input type="text" id="Name" class="form-control" placeholder="你的代币全称，如(nebulas)" >
+							</div>
+							<div class="col-sm-6">
+								<label class="control-label" for="inputSuccess1">代币简称</label>
+								<input type="text" id="Symbol" class="form-control" placeholder="你的代币全称， 如(NAS)" >
+							</div>
+						</div>
+					</form>  
+					<form  class="form-horizontal" role="form">
+						<div class="form-group has-feedback">
+							<div class="col-sm-6">
+								<label class="control-label" for="inputSuccess1">小数位数</label>
+								<input type="text" id="Decimals" class="form-control" placeholder="代币最多可以有18位小数(18)" >
+							</div>
+							<div class="col-sm-6">
+								<label class="control-label" for="inputSuccess1">代币总量</label>
+								<input type="text" id="TotalSupply" class="form-control" placeholder="不如先来一个亿吧(1000000000)" >
+							</div>
+						</div>
+					</form>
+					<div class="clearfix"></div>  
+				</div>
+				<div class="sear">
+					<!--<a class="btn btn-success" onclick="onCall();">提交</a>-->
+					<!--<a class="btn btn-success" onclick="submitTransaction();">提交</a>-->
+					<a class="btn btn-success" data-toggle="modal" data-target="#myModal3">提交</a>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+	<!--- /token ---->
+	
+	<!-- unlock -->
+	<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<section>
+					<div class="modal-body modal-spa">
+						<div class="writ" id="newWindow">
+							<h4>解锁你的星云账户！</h4>
+								<ul>
+									<li class="na-me">
+										<input class="btn btn-success btn-block" id="keyFile" type="file" accept="application/json">
+									</li>
+									<li class="na-me">
+										<input class="pass" id="pass" type="text" placeholder="请输入密码">
+									</li>
+										<div class="clearfix"></div>
+								</ul>
+								<div class="sub-bn form-group">
+									<div class="col-sm-6">
+										<button class="subbtn" onclick="submitTransaction();">确定</button>
+									</div>
+									<div class="col-sm-6">
+									<form>
+										<button class="subbtn">取消</button>
+									</form>
+									</div>
+								</div>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<!-- //unlock -->
+	<script src="lib/nebulas.js"></script>
+	<!-- nebulas -->
+	<script type="text/javascript">
+		'use strict';
+		var HttpRequest = require("nebulas").HttpRequest;
+		var Neb = require("nebulas").Neb;
+		var Account = require("nebulas").Account;
+		var Transaction = require("nebulas").Transaction;
+		var source  = new contractSource().source;
+		var account = new Account();
+		var contractAddress = 'n1vauL6bmmSJqiTXgd6yjKpsB1a57JkbGXL';
+		var intervalQuery;
+		var newWindow = document.getElementById("newWindow");
+		
+		// 连接网络
+		var neb = new Neb();
+		var chainId = 1001;
+		var netWork = "https://testnet.nebulas.io"
+		neb.setRequest(new HttpRequest(netWork));
+
+		// 合约代码
+		function contractSource() {
+			this.source = `'use strict';
+
+			var Allowed = function (obj) {
+				this.allowed = {};
+				this.parse(obj);
+			}
+			
+			Allowed.prototype = {
+				toString: function () {
+					return JSON.stringify(this.allowed);
+				},
+				parse: function (obj) {
+					if (typeof obj != "undefined") {
+						var data = JSON.parse(obj);
+						for (var key in data) {
+							this.allowed[key] = new BigNumber(data[key]);
+						}
+					}
+				},
+			
+				get: function (key) {
+					return this.allowed[key];
+				},
+			
+				set: function (key, value) {
+					this.allowed[key] = new BigNumber(value);
+				}
+			}
+			
+			var StandardToken = function () {
+				LocalContractStorage.defineProperties(this, {
+					_name: null,
+					_symbol: null,
+					_decimals: null,
+					_totalSupply: {
+						parse: function (value) {
+							return new BigNumber(value);
+						},
+						stringify: function (o) {
+							return o.toString(10);
+						}
+					}
+				});
+			
+				LocalContractStorage.defineMapProperties(this, {
+					"balances": {
+						parse: function (value) {
+							return new BigNumber(value);
+						},
+						stringify: function (o) {
+							return o.toString(10);
+						}
+					},
+					"allowed": {
+						parse: function (value) {
+							return new Allowed(value);
+						},
+						stringify: function (o) {
+							return o.toString();
+						}
+					}
+				});
+			};
+			
+			StandardToken.prototype = {
+				init: function (name, symbol, decimals, totalSupply) {
+					this._name = name;
+					this._symbol = symbol;
+					this._decimals = decimals || 0;
+					this._totalSupply = new BigNumber(totalSupply).mul(new BigNumber(10).pow(decimals));
+			
+					var from = Blockchain.transaction.from;
+					this.balances.set(from, this._totalSupply);
+					this.transferEvent(true, from, from, this._totalSupply);
+				},
+			
+				// Returns the name of the token
+				name: function () {
+					return this._name;
+				},
+			
+				// Returns the symbol of the token
+				symbol: function () {
+					return this._symbol;
+				},
+			
+				// Returns the number of decimals the token uses
+				decimals: function () {
+					return this._decimals;
+				},
+			
+				totalSupply: function () {
+					return this._totalSupply.toString(10);
+				},
+			
+				balanceOf: function (owner) {
+					var balance = this.balances.get(owner);
+			
+					if (balance instanceof BigNumber) {
+						return balance.toString(10);
+					} else {
+						return "0";
+					}
+				},
+			
+				transfer: function (to, value) {
+					value = new BigNumber(value);
+					if (value.lt(0)) {
+						throw new Error("invalid value.");
+					}
+			
+					var from = Blockchain.transaction.from;
+					var balance = this.balances.get(from) || new BigNumber(0);
+			
+					if (balance.lt(value)) {
+						throw new Error("transfer failed.");
+					}
+			
+					this.balances.set(from, balance.sub(value));
+					var toBalance = this.balances.get(to) || new BigNumber(0);
+					this.balances.set(to, toBalance.add(value));
+			
+					this.transferEvent(true, from, to, value);
+				},
+			
+				transferFrom: function (from, to, value) {
+					var spender = Blockchain.transaction.from;
+					var balance = this.balances.get(from) || new BigNumber(0);
+			
+					var allowed = this.allowed.get(from) || new Allowed();
+					var allowedValue = allowed.get(spender) || new BigNumber(0);
+					value = new BigNumber(value);
+			
+					if (value.gte(0) && balance.gte(value) && allowedValue.gte(value)) {
+			
+						this.balances.set(from, balance.sub(value));
+			
+						// update allowed value
+						allowed.set(spender, allowedValue.sub(value));
+						this.allowed.set(from, allowed);
+			
+						var toBalance = this.balances.get(to) || new BigNumber(0);
+						this.balances.set(to, toBalance.add(value));
+			
+						this.transferEvent(true, from, to, value);
+					} else {
+						throw new Error("transfer failed.");
+					}
+				},
+			
+				transferEvent: function (status, from, to, value) {
+					Event.Trigger(this.name(), {
+						Status: status,
+						Transfer: {
+							from: from,
+							to: to,
+							value: value
+						}
+					});
+				},
+			
+				approve: function (spender, currentValue, value) {
+					var from = Blockchain.transaction.from;
+			
+					var oldValue = this.allowance(from, spender);
+					if (oldValue != currentValue.toString()) {
+						throw new Error("current approve value mistake.");
+					}
+			
+					var balance = new BigNumber(this.balanceOf(from));
+					var value = new BigNumber(value);
+			
+					if (value.lt(0) || balance.lt(value)) {
+						throw new Error("invalid value.");
+					}
+			
+					var owned = this.allowed.get(from) || new Allowed();
+					owned.set(spender, value);
+			
+					this.allowed.set(from, owned);
+			
+					this.approveEvent(true, from, spender, value);
+				},
+			
+				approveEvent: function (status, from, spender, value) {
+					Event.Trigger(this.name(), {
+						Status: status,
+						Approve: {
+							owner: from,
+							spender: spender,
+							value: value
+						}
+					});
+				},
+			
+				allowance: function (owner, spender) {
+					var owned = this.allowed.get(owner);
+			
+					if (owned instanceof Allowed) {
+						var spender = owned.get(spender);
+						if (typeof spender != "undefined") {
+							return spender.toString(10);
+						}
+					}
+					return "0";
+				}
+			};
+			
+			module.exports = StandardToken;`;
+		}
+
+		// 读取文件
+		function readKey() {
+			var promise = new Promise (function(resolve, reject) { 
+				var keyStore = document.getElementById("keyFile").files[0];
+				if (keyStore == undefined) {
+					alert("别忘了加载你的钱包文件哦");
+				} else{
+					var oFReader = new FileReader();  
+					oFReader.readAsText(keyStore);
+					oFReader.onloadend = function(oFRevent){  
+						var key = oFRevent.target.result;
+						// sessionStorage.setItem("nasKeyStore", key);
+						resolve(key);
+					}
+				}
+			});
+			return promise;
+		};
+		
+		// 提交合约交易
+		function submitTransaction() {
+			var name = document.getElementById('Name').value;
+			var symbol = document.getElementById('Symbol').value;
+			var decimals = document.getElementById('Decimals').value;
+			var totalSupply = document.getElementById('TotalSupply').value;
+			if (name === "" || symbol === "" || decimals === "" || totalSupply === "") {
+				alert('请将以上数据填写完整！')
+			} else{
+				var args = [name, symbol, decimals, totalSupply]
+				var password = document.getElementById("pass").value;
+				if (password === "") {
+					alert('客官放心的输入密码吧，我们不会保存的！')
+				} else {
+					readKey().then(function(key) {
+						generateTransaction(key, password, args);
+					})
+				}
+			}
+		};
+		
+		// 生成合约交易
+		function generateTransaction(key, password, args) {
+			initAccount(key, password).then(function(account){
+				return accountBalance(account);
+			}).then(function(account) {
+				return signTransaction(account, "", source, "", args);
+			}).then(function(data) {
+				return deployTransaction(data)
+			}).then(function(txhash){
+				newWindow.innerHTML = '<h4>正在提交，请稍等...</h4>'
+				intervalQuery = setInterval(function() {
+					funcIntervalQuery(txhash);
+				}, 5000);
+			})
+		}
+		
+		// 查询交易结果
+		function funcIntervalQuery(txhash) {
+			console.log('正在查询')
+			receiptTransaction(txhash).then(function(resp){
+				var respObject = resp;
+				if (respObject.status == 1){
+					var con_addr = respObject.contract_address;
+					clearInterval(intervalQuery);
+					signTransaction(account, contractAddress,"", "save", [con_addr]).then(function(data){
+						return deployTransaction(data)
+					}).then(function(txhash){
+						newWindow.innerHTML = `
+						<h4>部署成功！已添加到您的钱包中！</h4>
+						<div class="sub-bn form-group">
+							<form>
+								<button class="btn btn-success btn-block">知道了</button>
+							</form>
+						</div>`
+					})
+				} else if (respObject.status == 0) {
+					alert("部署失败")
+				}
+			})
+		}
+
+		// 导入账户
+		var initAccount = function(key, passphrase) {
+			var promise = new Promise(function(resolve, reject){
+				account.fromKey(key, passphrase);
+				var ss = account.getAddressString();
+				console.log("导入账户成功，地址为：" + ss);
+				resolve(account);
+			}).catch(function(err){
+				alert("导入账户失败，是不是密码记错了！");
+			});
+			return promise;
+		}
+		
+		// 签名合约
+		var signTransaction = function(account, contract_address, source, contractFunction, args) {
+			if (contract_address === "") contract_address = account;
+			var promise = new Promise(function(resolve, reject){
+				neb.api.getAccountState(account.getAddressString()).then(function(state) {
+					var nonce = parseInt(state.nonce) + 1;
+					var tx = new Transaction({
+						chainID: chainId,
+						from: account,
+						to: contract_address,
+						value: 0,
+						nonce: nonce,
+						gasPrice: 1000000,
+						gasLimit: 100000,
+						contract: {
+							source: source,
+							sourceType: "js",
+							function: contractFunction,
+							args: JSON.stringify(args),
+						}
+					});
+					tx.signTransaction();
+					resolve(tx.toProtoString());
+				}).catch(function(err) {
+					console.log(err);
+				});
+			});
+			return promise;
+		}
+		
+		// 部署合约
+		var deployTransaction = function(data) {
+			var promise = new Promise(function(resolve, reject){
+				neb.api.sendRawTransaction(data).then(function (resp) {
+					resp = resp.result || resp;
+					var txhash = resp.txhash;
+					console.log('合约提交成功,txhash:' + txhash);
+					resolve(txhash)
+				}).catch(function (err) {
+					console.log(err);
+				})
+			});
+			return promise;
+		}
+
+		// 查询交易结果
+		var receiptTransaction = function(txhash) {
+			var promise = new Promise(function(resolve, reject){
+				neb.api.getTransactionReceipt(txhash).then(function (resp) {
+					resolve(resp);
+				}).catch(function(err) {
+					console.log(err);
+				});
+			});
+			return promise
+		}
+		
+		// 查询账户余额
+		var accountBalance = function(account) {
+			var promise = new Promise(function(resolve, reject){
+				neb.api.getAccountState(account.getAddressString()).then(function(result) {
+					var balance =  result.balance;
+					if (balance >= 100000000000){
+						resolve(account);
+					} else {
+						alert(`"您的余额不足,创建代币您的NAS余额最少为100000000000,您的当前余额为${balance}"`)
+					}	
+				}).catch(function(err) {
+						console.log(err);
+				});
+			});
+			return promise;
+		}
+	</script>
+	<!-- nebulas -->
+</body>
+</html>

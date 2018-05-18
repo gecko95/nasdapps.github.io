@@ -1,0 +1,564 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>星云钱包</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="" />
+	<script type="applijewelleryion/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+	<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+	<link href="css/style.css" rel='stylesheet' type='text/css' />
+	<!-- Custom Theme files -->
+	<script src="js/jquery-1.12.0.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<!--animate-->
+	<link href="css/animate.css" rel="stylesheet" type="text/css" media="all">
+	<script src="js/wow.min.js"></script>
+	<script>
+		new WOW().init();
+	</script>
+	<!--//end-animate-->
+</head>
+<body onload="loadWallet();">
+	<!--- header ---->
+	<div class="header">
+		<div class="container">
+			<div class="logo wow fadeInDown animated" data-wow-delay=".2s">
+				<a href="index.html">星云 <span>代币钱包</span></a>	
+			</div>
+			<div class="bus wow fadeInUp animated" data-wow-delay=".2s">
+				<a href="index.html" class="buses active">代币钱包</a>
+				<a href="token.html">创建代币</a>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	<!--- /header ---->
+
+	<!--- wallet ---->
+	<div class="wallet">
+		<div class="container">
+			<div class="search animated wow fadeInUp animated animated" data-wow-delay=".5s">
+				<h3>钱包使用说明</h3>
+			</div>
+			<div class="search animated wow fadeInUp animated animated" data-wow-delay=".5s">
+				<p>在下方输入你的星云账户地址并提交，即可查询你钱包中添加的代币及余额。<br> 
+					你也可以创建属于你自己的代币，分分钟ICO，担任CEO，迎娶白富美，从此走上人生巅峰！还等什么，赶快行动吧！
+					
+				</p>
+				<form  class="form-horizontal" role="form">
+					<div class="form-group">
+						<!-- <label class="control-label sr-only" for="inputSuccess1">搜索框</label> -->
+						<div class="col-sm-8">
+						<input type="text" id="accountAddress" class="form-control" placeholder="请输入你的星云账户地址" >
+						</div>
+						<!-- <span class="help-block">你输入的信息是正确的</span> -->
+						<!-- <span class="glyphicon glyphicon-ok form-control-feedback"></span> -->
+						<div class="col-sm-4">
+							<button class="btn btn-success" type="button" onclick="searchWallet();">提交</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="tra-top animated wow fadeInUp animated animated" data-wow-delay=".5s">
+				<h4>已添加代币列表</h4>
+				<div class="list">
+					<ul class="rout">
+						<li class="name">代币名称</li>
+						<li class="address">代币地址</li>
+						<li class="balance">代币余额</span></li>
+						<li class="send">发送代币</li>
+						<div class="clearfix"></div>
+					</ul>
+					<!--<ul class="rou-secnd animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
+						<!--
+						<li class="name">
+							<p><strong>NAS</strong></p>
+						</li>
+						<li class="address">
+							<p>星云链官方数字货币</p>
+						</li>
+						<li class="balance">
+							<p id="nasBalance"></p>
+						</li>
+						<li class="send">
+							<button class="btn btn-success" type="button" data-toggle="modal" data-target="#myModal4" onclick="clickSend();">发送</button>
+						</li> -->
+					
+						<div class="hello" id="hello">
+							<p>您的钱包还没有内容，<br>快点添加您拥有的代币吧！<br><em>或者去创建一个属于你自己的代币！</em></p>	
+							<div class="clearfix"></div>
+						</div>
+
+						<div class="hello" id="loading">
+							<p>正在加载钱包, 请稍等...</p>
+							<div class="clearfix"></div>
+						</div>
+						
+						
+						
+					
+					<div id="tokenList">
+					</div>
+				</div>
+				<div class="add">
+					<button class="btn btn-success" type="button" data-toggle="modal" data-target="#myModal3">添加代币</button>
+				</div>	
+			</div>
+		</div>
+	</div>
+	<!--- /wallet ---->
+	<!-- add token -->
+	<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<section>
+						<div class="modal-body modal-spa">
+							<div class="writ" id="newWindow">
+								<h4>解锁你的星云账户！</h4>
+									<ul>
+										<li class="na-me", id="uploadButton">
+											<input class="inputfile btn btn-success btn-block" id="keyFile" type="file" accept="application/json">
+										</li>
+										<li class="na-me">
+											<input class="pass" id="pass" type="text" placeholder="请输入密码">
+										</li>
+										<li class="na-me">
+												<input class="pass" id="addAddress" type="text" placeholder="请输入你要添加的代币地址">
+										</li>
+										<div class="clearfix"></div>
+									</ul>
+									<div class="sub-bn form-group">
+										<div class="col-sm-6">
+											<button class="subbtn" onclick="addToken();">确定</button>
+										</div>
+										<div class="col-sm-6">
+										<form>
+											<button class="subbtn">取消</button>
+										</form>
+										</div>
+									</div>
+							</div>
+						</div>
+					</section>
+				</div>
+			</div>
+	</div>
+	<!-- //add token -->
+	<!-- send Token -->
+	<div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>						
+					</div>
+						<section>
+							<div class="modal-body modal-spa">
+								<div class="writ", id="newWindow1">
+									<h4>发送代币</h4>
+										<ul>
+											<li class="na-me">
+												<input class="name" id="tokenName" type="text" value="tokenName">
+											</li>
+											<li class="na-me">
+												<input class="address" id="tokenAddress" type="text" value="tokenAddress">
+											</li>
+											<li class="na-me">
+												<input class="balance" id="tokenBalance" type="text" value="tokenBalance">
+											</li>
+											<li class="na-me">
+													<input class="balance" id="toAddress" type="text" placeholder="请输入转账地址">
+											</li>
+											<li class="na-me">
+													<input class="balance" id="tokenValue" type="text" placeholder="请输入转账金额">
+											</li>
+											<li class="na-me">
+												<input class="btn btn-success btn-block" id="keyFile1" type="file" accept="application/json">
+											</li>
+											<li class="na-me">
+												<input class="pass" id="pass1" type="text" placeholder="请输入密码">
+											</li>
+											<div class="clearfix"></div>
+										</ul>
+										<div class="sub-bn form-group">
+											<div class="col-sm-6">
+												<button class="subbtn" onclick="sendToken();">确定</button>
+											</div>
+											<div class="col-sm-6">
+											<form>
+												<button class="subbtn">取消</button>
+											</form>
+											</div>
+										</div>
+								</div>
+							</div>
+						</section>
+				</div>
+			</div>
+	</div>
+	<!-- //send Token -->
+	<script src="lib/nebulas.js"></script>
+	<script type="text/javascript">
+		'use strict';
+		var HttpRequest = require("nebulas").HttpRequest;
+		var Neb = require("nebulas").Neb;
+		var Account = require("nebulas").Account;
+		var Transaction = require("nebulas").Transaction;
+		var account = new Account();
+		var contractAddress = 'n1vauL6bmmSJqiTXgd6yjKpsB1a57JkbGXL';
+		var intervalQuery;
+		var newWindow = document.getElementById("newWindow");
+		var newWindow1 = document.getElementById("newWindow1");
+		
+		// 连接网络
+		var neb = new Neb();
+		var chainId = 1001;
+		var netWork = "https://testnet.nebulas.io"
+		neb.setRequest(new HttpRequest(netWork));
+		
+		// 搜索Token
+		function loadWallet() {
+			var accountAddress = sessionStorage.getItem("accountAddress");
+			var accountAddressInput = document.getElementById("accountAddress");
+			if (accountAddress){
+				document.getElementById("hello").style.display = "none";
+				document.getElementById("loading").style.display = "inline";
+				accountAddressInput.placeholder = accountAddress;
+				searchToken(accountAddress);
+			}
+		};
+
+		function searchWallet() {
+			var accountAddress = document.getElementById('accountAddress').value;
+			if (accountAddress === "") {
+				alert("客官，给我个地址吧，巧妇难为无米之炊呀！");
+			} else if (Account.isValidAddress(accountAddress)) {
+				document.getElementById("hello").style.display = "none";
+				document.getElementById("loading").style.display = "inline";
+
+				sessionStorage.setItem("accountAddress", accountAddress);
+				searchToken(accountAddress);
+			} else {
+				alert("您输入的地址无效，请检查是否输入错误！");
+			}
+		};
+
+		function callContract(accountAddress, contractAddress, func, args) {
+			var promise = new Promise (function(resolve, reject) {
+				neb.api.call({
+					chainID: chainId,
+					from: accountAddress,
+					to: contractAddress,
+					value: 0,
+					nonce: 0,
+					gasPrice: 1000000,
+					gasLimit: 2000000,
+					contract: {
+						function: func,
+						args: JSON.stringify(args),
+					}
+				}).then(function (resp) {
+					var data = JSON.parse(resp.result);
+					resolve(data)
+				}).catch(function(err) {
+					console.log(err);
+					if (err == "Error: invalid contract"){
+						alert("没有搜索到代币，请检查您的合约地址是否正确！");
+					} else{
+						alert("您还没有代币，赶快添加吧！");
+						document.getElementById("tokenList").innerHTML = "";
+						document.getElementById("hello").style.display = "inline";
+						document.getElementById("loading").style.display = "none";
+					}
+				})
+			});
+			return promise;
+		};
+
+		function callToken(accountAddress, contractAddress) {
+			var promise = new Promise (function(resolve, reject) {
+				var name, symbol;
+				// var decimals, totalSupply;
+				var balance;
+				callContract(accountAddress, contractAddress, "name", []).then(function(data){
+					name = data;
+					return callContract(accountAddress, contractAddress, "symbol", [])
+				}).then(function(data) {
+					symbol = data;
+				/*	return callContract(accountAddress, contractAddress, "decimals", [])
+				}).then(function(data) {
+					decimals = data;
+					return callContract(accountAddress, contractAddress, "totalSupply", [])
+				}).then(function(data) {
+					totalSupply = data; */
+					return callContract(accountAddress, contractAddress, "balanceOf", [accountAddress])
+				}).then(function(data) {
+					balance = data;
+					var dic = {name: name, symbol: symbol, 
+						//decimals: decimals, totalSupply:totalSupply, 
+						balance: balance, address: contractAddress};
+					resolve(dic)
+				});
+			});
+			return promise;
+		}
+
+		function searchToken(accountAddress) {
+			callContract(accountAddress, contractAddress,"search", [accountAddress]).then(function(tokens){
+				var tokenHtml = "";
+				var tokenList = new Array();
+				var tokenContent = document.getElementById('tokenList');
+				var contentList = new Array();
+				for (var i=0; i< tokens.length; i++){
+					var cAddress = tokens[i]
+					contentList.push(callToken(accountAddress, cAddress))
+				}
+				Promise.all(contentList).then(function(data){
+					for (var i=0; i< data.length; i++){
+						var token = data[i];
+						var name = token['name'];
+						var symbol = token['symbol'];
+						//var decimals = token['decimals'];
+						//var totalSupply = token['totalSupply'];
+						var balance = token['balance'];
+						var address = token['address'];
+						var content = `
+						<ul class="rou-secnd animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
+								<li class="name"><p><strong>${name}</strong>(${symbol})</p></li>
+								<li class="address"><p>${address}</p></li>
+								<li class="balance"><p>${balance}</p></li>
+								<li class="send"><button class="btn btn-success" type="button" data-toggle="modal" data-target="#myModal4" onclick="clickSend('${symbol}','${address}',${balance});">发送</button></li>
+								<div class="clearfix"></div>
+						</ul>`
+						tokenHtml += content;
+					} 
+					document.getElementById("loading").style.display = "none";
+					tokenContent.innerHTML = tokenHtml;
+				})
+			}).catch(function(err) {
+				console.log(err);
+			});
+		}
+
+		//添加token
+		function addToken() {
+			var tokenAddress = document.getElementById('addAddress').value;
+			var password = document.getElementById("pass").value;
+			if (tokenAddress ==="" || password === "") {
+				alert("请将内容填写完整！");
+			} else if(Account.isValidAddress(tokenAddress)) {
+				callContract(tokenAddress, tokenAddress, "name", []).then(function(data){
+					console.log(data)
+					var args = [tokenAddress];
+					var keyStore = document.getElementById("keyFile").files[0];
+					readKey(keyStore).then(function(key) {
+							generateAddTransaction(key, password, args);
+					})
+				}).catch(function(err){
+					alert("没有搜索到该代币地址！");
+				})
+				
+			} else {
+				alert("您输入的地址无效，请检查是否输入错误！");
+			}
+		};
+
+		//点击发送
+		function clickSend(symbol, address, balance) {
+			document.getElementById("tokenName").value = symbol;
+			document.getElementById("tokenAddress").value = address;
+			document.getElementById("tokenBalance").value = balance;
+		}
+
+		//发送代币
+		function sendToken() {
+			var address = document.getElementById("tokenAddress").value;
+			var balance = document.getElementById("tokenBalance").value;
+			var toAddress = document.getElementById("toAddress").value;
+			var value = document.getElementById("tokenValue").value;
+			var password = document.getElementById("pass1").value;
+			console.log(toAddress)
+			if (toAddress == "" || value === "") {
+				alert("请将内容填写完整");
+			} else if(parseInt(value) > parseInt(balance)) {
+				alert("您没有这么多钱可以转账！");
+			} else if(!Account.isValidAddress(toAddress)){
+				alert("您输入的地址无效，请检查是否输入错误！");
+			} else {
+				var args = [toAddress, parseInt(value)];
+				console.log(args)
+				var keyStore = document.getElementById("keyFile1").files[0];
+				readKey(keyStore).then(function(key) {
+					console.log(key)
+					generateTransaction(key, password, address, args);
+				})
+			}
+		}
+
+		// 读取文件
+		function readKey(keyStore) {
+			var promise = new Promise (function(resolve, reject) { 
+				if (keyStore == undefined) {
+					alert("别忘了加载你的钱包文件哦");
+				} else{
+					var oFReader = new FileReader();  
+					oFReader.readAsText(keyStore);
+					oFReader.onloadend = function(oFRevent){  
+						var key = oFRevent.target.result;
+						// sessionStorage.setItem("nasKeyStore", key);
+						resolve(key);
+					}
+				}
+			});
+			return promise;
+		};
+
+		// 生成添加交易
+		function generateAddTransaction(key, password, args) {
+			initAccount(key, password).then(function(account){
+				return accountBalance(account);
+			}).then(function(account) {
+				return signTransaction(account, contractAddress, "save", args);
+			}).then(function(data) {
+
+				return deployTransaction(data)
+			}).then(function(txhash){
+				newWindow.innerHTML = `<h4>正在提交，请稍等...</h4>`
+				intervalQuery = setInterval(function() {
+					funcIntervalQuery(txhash);
+				}, 5000);
+			})
+		}
+
+		// 生成转账交易
+		function generateTransaction(key, password,conAdd, args) {
+			initAccount(key, password).then(function(account){
+				return accountBalance(account);
+			}).then(function(account) {
+				return signTransaction(account, conAdd, "transfer", args);
+			}).then(function(data) {
+				return deployTransaction(data)
+			}).then(function(txhash){
+				newWindow1.innerHTML = `<h4>正在提交，请稍等...</h4>`
+				intervalQuery = setInterval(function() {
+					funcIntervalQuery(txhash);
+				}, 5000);
+			})
+		}
+
+		// 查询交易结果
+		function funcIntervalQuery(txhash) {
+			console.log('正在查询')
+			receiptTransaction(txhash).then(function(resp){
+				var respObject = resp;
+				if (respObject.status == 1){
+					clearInterval(intervalQuery);
+					newWindow.innerHTML = `
+					<h4>执行成功！</h4>
+					<div class="sub-bn form-group">
+						<form>
+							<button class="btn btn-success btn-block">知道了</button>
+						</form>
+					</div>`
+					newWindow1.innerHTML = `
+					<h4>执行成功！</h4>
+					<div class="sub-bn form-group">
+						<form>
+							<button class="btn btn-success btn-block">知道了</button>
+						</form>
+					</div>`
+				} else if (respObject.status == 0) {
+					newWindow.innerHTML = `<h4>啊哦，好像哪里出错了！</h4>`
+				}
+			}).catch(function(err){
+				newWindow.innerHTML = `<h4>啊哦，好像哪里出错了！</h4>`
+			})
+		}
+
+		// 导入账户
+		var initAccount = function(key, passphrase) {
+			var promise = new Promise(function(resolve, reject){
+				account.fromKey(key, passphrase);
+				var ss = account.getAddressString();
+				console.log("导入账户成功，地址为：" + ss);
+				resolve(account);
+			}).catch(function(err){
+				alert("导入账户失败，是不是密码记错了！");
+			});
+			return promise;
+		}
+		
+		// 签名合约
+		var signTransaction = function(account, contract_address, contractFunction, args) {
+			if (contract_address === "") contract_address = account;
+			var promise = new Promise(function(resolve, reject){
+				neb.api.getAccountState(account.getAddressString()).then(function(state) {
+					var nonce = parseInt(state.nonce) + 1;
+					var tx = new Transaction({
+						chainID: chainId,
+						from: account,
+						to: contract_address,
+						value: 0,
+						nonce: nonce,
+						gasPrice: 1000000,
+						gasLimit: 100000,
+						contract: {
+							function: contractFunction,
+							args: JSON.stringify(args),
+						}
+					});
+					tx.signTransaction();
+					resolve(tx.toProtoString());
+				}).catch(function(err) {
+					console.log(err);
+				});
+			});
+			return promise;
+		}
+		
+		// 部署合约
+		var deployTransaction = function(data) {
+			var promise = new Promise(function(resolve, reject){
+				neb.api.sendRawTransaction(data).then(function (resp) {
+					resp = resp.result || resp;
+					var txhash = resp.txhash;
+					console.log('合约提交成功,txhash:' + txhash);
+					resolve(txhash)
+				}).catch(function (err) {
+					console.log(err);
+				})
+			});
+			return promise;
+		}
+
+		// 查询交易结果
+		var receiptTransaction = function(txhash) {
+			var promise = new Promise(function(resolve, reject){
+				neb.api.getTransactionReceipt(txhash).then(function (resp) {
+					resolve(resp);
+				}).catch(function(err) {
+					console.log(err);
+				});
+			});
+			return promise
+		}
+		
+		// 查询账户余额
+		var accountBalance = function(account) {
+			var promise = new Promise(function(resolve, reject){
+				neb.api.getAccountState(account.getAddressString()).then(function(result) {
+					var balance =  result.balance;
+					if (balance >= 100000000000){
+						resolve(account);
+					} else {
+						alert(`"您的余额不足,您最少需要NAS余额为100000000000,您的当前余额为${balance}"`)
+					}	
+				}).catch(function(err) {
+						console.log(err);
+				});
+			});
+			return promise;
+		}		
+	</script>
+</body>
+</html>
