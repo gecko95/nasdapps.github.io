@@ -97,7 +97,7 @@
 						
 						
 						
-					
+
 					<div id="tokenList">
 					</div>
 				</div>
@@ -107,7 +107,7 @@
 			</div>
 		</div>
 	</div>
-	<!--- /wallet ---->
+	<!-- /wallet -->
 	<!-- add token -->
 	<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 			<div class="modal-dialog" role="document">
@@ -275,7 +275,8 @@
 				}).catch(function(err) {
 					console.log(err);
 					if (err == "Error: invalid contract"){
-						alert("没有搜索到代币，请检查您的合约地址是否正确！");
+						//alert("没有搜索到代币，请检查您的合约地址是否正确！");
+						resolve(null);
 					} else{
 						alert("您还没有代币，赶快添加吧！");
 						document.getElementById("tokenList").innerHTML = "";
@@ -292,9 +293,16 @@
 				var name, symbol;
 				// var decimals, totalSupply;
 				var balance;
+				
 				callContract(accountAddress, contractAddress, "name", []).then(function(data){
-					name = data;
-					return callContract(accountAddress, contractAddress, "symbol", [])
+					console.log(data)
+					if (data === null) {
+						console.log('收到一个null')
+						resolve(null)
+					} else {
+						name = data;
+						return callContract(accountAddress, contractAddress, "symbol", [])
+					}
 				}).then(function(data) {
 					symbol = data;
 				/*	return callContract(accountAddress, contractAddress, "decimals", [])
@@ -311,6 +319,7 @@
 						balance: balance, address: contractAddress};
 					resolve(dic)
 				});
+				
 			});
 			return promise;
 		}
@@ -328,21 +337,25 @@
 				Promise.all(contentList).then(function(data){
 					for (var i=0; i< data.length; i++){
 						var token = data[i];
-						var name = token['name'];
-						var symbol = token['symbol'];
-						//var decimals = token['decimals'];
-						//var totalSupply = token['totalSupply'];
-						var balance = token['balance'];
-						var address = token['address'];
-						var content = `
-						<ul class="rou-secnd animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
-								<li class="name"><p><strong>${name}</strong>(${symbol})</p></li>
-								<li class="address"><p>${address}</p></li>
-								<li class="balance"><p>${balance}</p></li>
-								<li class="send"><button class="btn btn-success" type="button" data-toggle="modal" data-target="#myModal4" onclick="clickSend('${symbol}','${address}',${balance});">发送</button></li>
-								<div class="clearfix"></div>
-						</ul>`
-						tokenHtml += content;
+						if (token === null) {
+							console.log('存在一个非法地址！')
+						} else {
+							var name = token['name'];
+							var symbol = token['symbol'];
+							//var decimals = token['decimals'];
+							//var totalSupply = token['totalSupply'];
+							var balance = token['balance'];
+							var address = token['address'];
+							var content = `
+							<ul class="rou-secnd animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp;">
+									<li class="name"><p><strong>${name}</strong>(${symbol})</p></li>
+									<li class="address"><p>${address}</p></li>
+									<li class="balance"><p>${balance}</p></li>
+									<li class="send"><button class="btn btn-success" type="button" data-toggle="modal" data-target="#myModal4" onclick="clickSend('${symbol}','${address}',${balance});">发送</button></li>
+									<div class="clearfix"></div>
+							</ul>`
+							tokenHtml += content;
+						}
 					} 
 					document.getElementById("loading").style.display = "none";
 					tokenContent.innerHTML = tokenHtml;
