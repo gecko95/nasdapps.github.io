@@ -87,8 +87,9 @@
 				<section>
 					<div class="modal-body modal-spa">
 						<div class="writ" id="newWindow">
-							<h4>解锁你的星云账户！</h4>
-								<ul>
+							<h4>请输入你自己的账户地址！</h4>	
+							<ul>
+								<!--
 									<li class="na-me">
 										<input class="btn btn-success btn-block" id="keyFile" type="file" accept="application/json">
 									</li>
@@ -96,7 +97,12 @@
 										<input class="pass" id="pass" type="text" placeholder="请输入密码">
 									</li>
 										<div class="clearfix"></div>
-								</ul>
+								-->
+								<li class="na-me">
+										<input class="toAddress" id="toAddress" type="text" placeholder="请输入你的账户地址">
+								</li>
+								<div class="clearfix"></div>
+							</ul>
 								<div class="sub-bn form-group">
 									<div class="col-sm-6">
 										<button class="subbtn" onclick="submitTransaction();">确定</button>
@@ -115,23 +121,30 @@
 	</div>
 	<!-- //unlock -->
 	<script src="lib/nebulas.js"></script>
+	<script src="lib/nebPay.js"></script>
 	<!-- nebulas -->
 	<script type="text/javascript">
 		'use strict';
 		var HttpRequest = require("nebulas").HttpRequest;
 		var Neb = require("nebulas").Neb;
+		var NebPay = require("nebpay");
+		var nebPay = new NebPay(); 
 		var Account = require("nebulas").Account;
 		var Transaction = require("nebulas").Transaction;
 		var source  = new contractSource().source;
 		var account = new Account();
 		var contractAddress = 'n1p2jDhsmU59FJMNYGJbzZQVZQ1X6Xciv2T';
+		//var contractAddress = 'n1n1yK2iHoYLr2H8EzXeCNYkWterUWBoZfA';//测试
 		var intervalQuery;
+		var funcIntervalQuery2;
 		var newWindow = document.getElementById("newWindow");
 		
 		// 连接网络
 		var neb = new Neb();
 		var chainId = 1;
 		var netWork = "https://mainnet.nebulas.io"
+		var chainId = 1001;
+		var netWork = "https://testnet.nebulas.io"
 		neb.setRequest(new HttpRequest(netWork));
 
 		// 合约代码
@@ -367,7 +380,7 @@
 		};
 		
 		// 提交合约交易
-		function submitTransaction() {
+		function submitTransaction1() {
 			var name = document.getElementById('Name').value.trim();
 			var symbol = document.getElementById('Symbol').value.trim();
 			var decimals = document.getElementById('Decimals').value.trim();
@@ -383,6 +396,35 @@
 					readKey().then(function(key) {
 						generateTransaction(key, password, args);
 					})
+				}
+			}
+		};
+
+		// 提交合约交易
+		function submitTransaction() {
+			var name = document.getElementById('Name').value.trim();
+			var symbol = document.getElementById('Symbol').value.trim();
+			var decimals = document.getElementById('Decimals').value.trim();
+			var totalSupply = document.getElementById('TotalSupply').value.trim();
+			if (name === "" || symbol === "" || decimals === "" || totalSupply === "") {
+				alert('请将以上数据填写完整！')
+			} else{
+				var to = document.getElementById("toAddress").value.trim();
+				if (to === "") {
+					alert("请输入你的个人账户地址！");
+				} else {
+					var args = [name, symbol, decimals, totalSupply]
+					var deployArgs =  JSON.stringify(args); //参数格式为参数数组的JSON字符串, 比如'["arg"]','["arg1","arg2]'        
+					var options = {
+						listener: function (resp) {
+							intervalQuery = setInterval(function() {
+								funcIntervalQuery(resp.txhash);
+							}, 5000);
+						}
+					}
+					//发送交易(发起智能合约调用)
+					nebPay.deploy(to, source, "js", deployArgs, options)
+					newWindow.innerHTML = `<h4>请到<em>浏览器插件</em>中完成操作...</h4>`
 				}
 			}
 		};
@@ -405,29 +447,68 @@
 		
 		// 查询交易结果
 		function funcIntervalQuery(txhash) {
-			console.log('正在查询')
+			newWindow.innerHTML = `<h4>正在查询结果，请稍等...</h4>`
 			receiptTransaction(txhash).then(function(resp){
 				var respObject = resp;
 				if (respObject.status == 1){
 					var con_addr = respObject.contract_address;
 					clearInterval(intervalQuery);
-					signTransaction(account, contractAddress,"", "save", [con_addr]).then(function(data){
-						return deployTransaction(data)
-					}).then(function(txhash){
+					//signTransaction(account, contractAddress,"", "save", [con_addr]).then(function(data){
+					//	return deployTransaction(data)
+					//}).then(function(txhash){
 						newWindow.innerHTML = `
-						<h4>部署成功！已添加到您的钱包中！</h4>
+						<h4>部署成功！您的合约地址为:</h4>
+						<h4>${con_addr}</h4>
 						<div class="sub-bn form-group">
-							<form>
-								<button class="btn btn-success btn-block">知道了</button>
-							</form>
+							<button class="btn btn-success btn-block" onClick="addToken('${con_addr}');">添加到钱包中</button>
 						</div>`
-					})
+					//})
 				} else if (respObject.status == 0) {
 					alert("部署失败")
 				}
 			})
 		}
 
+		//添加token(nabpay)
+		function addToken(tokenAddress) {
+			var to = contractAddress;   //Dapp的合约地址
+			var value = 0;
+			var callFunction = "save";//调用的函数名称
+			var callArgs =  JSON.stringify([tokenAddress]); //参数格式为参数数组的JSON字符串, 比如'["arg"]','["arg1","arg2]'        
+			var options = {
+				listener: function (resp) {
+					intervalQuery = setInterval(function() {
+						funcIntervalQuery2(resp.txhash);
+					}, 5000);
+				}
+			}
+			//发送交易(发起智能合约调用)
+			nebPay.call(to, value, callFunction, callArgs, options);
+			newWindow.innerHTML = `<h4>请再次到<em>浏览器插件</em>中完成操作...</h4>`
+		}
+		
+		// 查询交易结果
+		function funcIntervalQuery2(txhash) {
+			newWindow.innerHTML = `<h4>正在查询结果，请稍等...</h4>`
+			receiptTransaction(txhash).then(function(resp){
+				var respObject = resp;
+				if (respObject.status == 1){
+					clearInterval(intervalQuery);
+					newWindow.innerHTML = `
+					<h4>代币添加成功，快去钱包中查看吧！</h4>
+					<div class="sub-bn form-group">
+						<form>
+							<a href="index.html" class="btn btn-success btn-block">知道了</button>
+						</form>
+					</div>`
+				} else if (respObject.status == 0) {
+					newWindow.innerHTML = `<h4>啊哦，好像哪里出错了！</h4>`
+				}
+			}).catch(function(err){
+				newWindow.innerHTML = `<h4>啊哦，好像哪里出错了！</h4>`
+			})
+		}
+		
 		// 导入账户
 		var initAccount = function(key, passphrase) {
 			var promise = new Promise(function(resolve, reject){
