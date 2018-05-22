@@ -29,6 +29,7 @@
 			<div class="bus wow fadeInUp animated" data-wow-delay=".2s">
 				<a href="index.html" class="buses active">代币钱包</a>
 				<a href="token.html">创建代币</a>
+				<a href="#" onclick="callMe();">联系我们</a>
 			</div>
 			<div class="clearfix"></div>
 		</div>
@@ -42,8 +43,9 @@
 				<h3>钱包使用说明</h3>
 			</div>
 			<div class="search animated wow fadeInUp animated animated" data-wow-delay=".5s">
-				<p>在下方输入你的星云账户地址并提交，即可查询你钱包中添加的代币及余额。<br> 
-					你也可以创建属于你自己的代币，分分钟ICO，担任CEO，迎娶白富美，从此走上人生巅峰！还等什么，赶快行动吧！
+				<p>在使用钱包之前，您需要安装<a href="https://github.com/ChengOrangeJu/WebExtensionWallet">WebExtensionWallet</a>官方钱包插件。</br>
+				   在下方输入你的星云账户地址并提交，即可查询你钱包中添加的代币及余额。<br> 
+				   你也可以创建属于你自己的代币，分分钟ICO，担任CEO，迎娶白富美，从此走上人生巅峰！还等什么，赶快行动吧！
 					
 				</p>
 				<form  class="form-horizontal" role="form">
@@ -635,7 +637,11 @@
 				});
 			});
 			return promise;
-		}		
+		}
+		
+		function callMe(){
+			alert('您好，如果您有任何问题欢迎给我们发邮件\n邮箱：379063958@qq.com');
+		}
 	</script>
 </body>
 </html>
