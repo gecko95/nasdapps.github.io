@@ -534,6 +534,7 @@
 					clearInterval(intervalQuery);
 					newWindow.innerHTML = `
 					<h4>执行成功！</h4>
+					<h4>交易哈希:${txhash}</h4>
 					<div class="sub-bn form-group">
 						<form>
 							<button class="btn btn-success btn-block">知道了</button>
@@ -541,16 +542,21 @@
 					</div>`
 					newWindow1.innerHTML = `
 					<h4>执行成功！</h4>
+					<h4>交易哈希:${txhash}</h4>
 					<div class="sub-bn form-group">
 						<form>
 							<button class="btn btn-success btn-block">知道了</button>
 						</form>
 					</div>`
 				} else if (respObject.status == 0) {
-					newWindow.innerHTML = `<h4>啊哦，好像哪里出错了！</h4>`
+					newWindow.innerHTML = `
+					<h4>啊哦，好像哪里出错了！</h4>
+					<h4>交易哈希:${txhash}</h4>`
 				}
 			}).catch(function(err){
-				newWindow.innerHTML = `<h4>啊哦，好像哪里出错了！</h4>`
+				newWindow.innerHTML = `
+				<h4>啊哦，好像哪里出错了！</h4>
+				<h4>交易哈希:${txhash}</h4>`
 			})
 		}
 
