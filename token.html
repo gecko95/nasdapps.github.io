@@ -460,7 +460,10 @@
 						newWindow.innerHTML = `
 						<h4>部署成功！您的合约地址为:</h4>
 						<h4>${con_addr}</h4>
-						<h4>交易哈希:${txhash}</h4>
+						<h4>您可以根据以下哈希，再次确认您的交易状态:</h4>
+						<div class="hash">
+							<p>${txhash}</p>
+						</div>
 						<div class="sub-bn form-group">
 							<button class="btn btn-success btn-block" onClick="addToken('${con_addr}');">添加到钱包中</button>
 						</div>`

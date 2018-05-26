@@ -533,16 +533,22 @@
 				if (respObject.status == 1){
 					clearInterval(intervalQuery);
 					newWindow.innerHTML = `
-					<h4>执行成功！</h4>
-					<h4>交易哈希:${txhash}</h4>
+					<h4>执行成功!</h4>
+					<h4>您可以根据以下哈希，再次确认您的交易状态:</h4>
+					<div class="hash">
+						<p>${txhash}</p>
+					</div>
 					<div class="sub-bn form-group">
 						<form>
 							<button class="btn btn-success btn-block">知道了</button>
 						</form>
 					</div>`
 					newWindow1.innerHTML = `
-					<h4>执行成功！</h4>
-					<h4>交易哈希:${txhash}</h4>
+					<h4>执行成功!</h4>
+					<h4>您可以根据以下哈希，再次确认您的交易状态:</h4>
+					<div class="hash">
+						<p>${txhash}</p>
+					</div>
 					<div class="sub-bn form-group">
 						<form>
 							<button class="btn btn-success btn-block">知道了</button>
@@ -551,12 +557,18 @@
 				} else if (respObject.status == 0) {
 					newWindow.innerHTML = `
 					<h4>啊哦，好像哪里出错了！</h4>
-					<h4>交易哈希:${txhash}</h4>`
+					<h4>您可以根据以下哈希，再次确认您的交易状态:</h4>
+					<div class="hash">
+						<p>${txhash}</p>
+					</div>`
 				}
 			}).catch(function(err){
 				newWindow.innerHTML = `
 				<h4>啊哦，好像哪里出错了！</h4>
-				<h4>交易哈希:${txhash}</h4>`
+				<h4>您可以根据以下哈希，再次确认您的交易状态:</h4>
+					<div class="hash">
+						<p>${txhash}</p>
+					</div>`
 			})
 		}
 

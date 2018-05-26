@@ -1025,6 +1025,9 @@ li.na-me {
 li.descrip {
     width: 100%;
 }
+.hash{
+    text-align: left;
+}
 .writ h4 {
     font-size: 1.5em;
     text-align: center;
